@@ -138,6 +138,49 @@ class Trainer:
         prediction_normalized = self.model.predict(input)
         prediction = self.scaler.inverse_transform(prediction_normalized)[0][0]
         return prediction
+    
+        @log("Predicting volatility by given week number with stored volatility data")
+    def week_number_local_data(self, df, week_to_predict):
+        """
+        Args:
+            week_to_predict (str): In format YYYY-Www, for example, 2021-W01
+        """
+        if self.model is None:
+            raise Exception("Model has not been trained yet")
+
+        wtp_dt = pendulum.parse(week_to_predict, tz="America/New_York")
+
+        start = wtp_dt.subtract(weeks=56).strftime("%Y-%m-%d")
+        end = wtp_dt.subtract(days=1).strftime("%Y-%m-%d")
+        
+        df = self._normalize_values(df)
+
+        input = np.array([df[-52:]])
+        prediction_normalized = self.model.predict(input)
+        prediction = self.scaler.inverse_transform(prediction_normalized)[0][0]
+        return prediction
+    
+     @log("Predicting volatility by given week number with specific model of specified year")
+    def week_number_year_trained(self, df, week_to_predict, year_trained):
+        """
+        Args:
+            week_to_predict (str): In format YYYY-Www, for example, 2021-W01
+            year_trained (str): In format YYYY, for example, 2019
+        """
+#         if self.model is None:
+#             raise Exception("Model has not been trained yet")
+
+        wtp_dt = pendulum.parse(week_to_predict, tz="America/New_York")
+
+        start = wtp_dt.subtract(weeks=56).strftime("%Y-%m-%d")
+        end = wtp_dt.subtract(days=1).strftime("%Y-%m-%d")
+        
+        df = self._normalize_values(df)
+
+        input = np.array([df[-52:]])
+        prediction_normalized = self.model.predict(input)
+        prediction = self.scaler.inverse_transform(prediction_normalized)[0][0]
+        return prediction
 
     @log("Getting historical data for training")
     def _get_historical_data_for_training(self, start, end, force=False):
