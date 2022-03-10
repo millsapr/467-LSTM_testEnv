@@ -126,11 +126,11 @@ class Trainer:
         start = wtp_dt.subtract(weeks=56).strftime("%Y-%m-%d")
         end = wtp_dt.subtract(days=1).strftime("%Y-%m-%d")
         
-        # df = get_history_apca(self.symbol, start=start, end=end)
+        df = get_history_apca(self.symbol, start=start, end=end)
 
-        # self._rename_cols(df)
-        # self._create_helper_col(df)
-        # df = self._create_volatility_df(df)
+        self._rename_cols(df)
+        self._create_helper_col(df)
+        df = self._create_volatility_df(df)
         
         df = self._normalize_values(df)
 
